@@ -20,7 +20,8 @@ namespace LOSApplicationApi.Mapper
 
             //Mapping configurations for UserRoles
             CreateMap<UserRoles, AddUserRolesDTO>().ReverseMap();
-            CreateMap<UserRoles, FetchUserRolesDTO>().ReverseMap();
+            CreateMap<UserRoles, FetchUserRolesDTO>().ForMember(x=>x.UserName,x=>x.MapFrom(x=>x.User!=null?x.User.UserName:"No Data"))
+                                               .ForMember(x=>x.RoleName,x=>x.MapFrom(x=>x.Role!=null?x.Role.RoleName:"No Data"));
 
             //Mapping configurations for Countries
             CreateMap<Countries, AddCountryDTO>().ReverseMap();
