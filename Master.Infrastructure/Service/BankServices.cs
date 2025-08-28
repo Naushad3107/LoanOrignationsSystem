@@ -3,6 +3,7 @@ using LOSApplicationApi.Data;
 using LOSApplicationApi.DTO;
 using LOSApplicationApi.Model;
 using LOSApplicationApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LOSApplicationApi.Service
 {

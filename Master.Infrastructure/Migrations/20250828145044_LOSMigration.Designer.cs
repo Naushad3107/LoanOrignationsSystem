@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Master.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250825130708_freshstart")]
-    partial class freshstart
+    [Migration("20250828145044_LOSMigration")]
+    partial class LOSMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -581,6 +581,114 @@ namespace Master.Infrastructure.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("Master.Domain.Model.Module", b =>
+                {
+                    b.Property<int>("ModuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModuleId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("IsActive")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("IsDeleted")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("ModuleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ModuleId");
+
+                    b.ToTable("modules");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.Permissions", b =>
+                {
+                    b.Property<int>("PermissionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PermissionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PermissionId");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.RolePermissions", b =>
+                {
+                    b.Property<int>("RolePermissionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolePermissionId"));
+
+                    b.Property<byte>("IsActive")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubModuleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RolePermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("SubModuleId");
+
+                    b.ToTable("RolePermissions");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.SubModule", b =>
+                {
+                    b.Property<int>("SubModuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubModuleId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("IsActive")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubModuleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SubModuleId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("subModules");
+                });
+
             modelBuilder.Entity("LOSApplicationApi.Model.Branch", b =>
                 {
                     b.HasOne("LOSApplicationApi.Model.Bank", "Bank")
@@ -668,6 +776,44 @@ namespace Master.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Master.Domain.Model.RolePermissions", b =>
+                {
+                    b.HasOne("Master.Domain.Model.Permissions", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LOSApplicationApi.Model.Roles", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Master.Domain.Model.SubModule", "SubModule")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("SubModuleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("SubModule");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.SubModule", b =>
+                {
+                    b.HasOne("Master.Domain.Model.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("LOSApplicationApi.Model.Bank", b =>
                 {
                     b.Navigation("Branches");
@@ -697,6 +843,8 @@ namespace Master.Infrastructure.Migrations
 
             modelBuilder.Entity("LOSApplicationApi.Model.Roles", b =>
                 {
+                    b.Navigation("RolePermissions");
+
                     b.Navigation("UserRoles");
                 });
 
@@ -710,6 +858,16 @@ namespace Master.Infrastructure.Migrations
             modelBuilder.Entity("LOSApplicationApi.Model.Users", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.Permissions", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("Master.Domain.Model.SubModule", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

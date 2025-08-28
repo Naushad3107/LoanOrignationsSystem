@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LOSApplicationApi.Data;
 using LOSApplicationApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LOSApplicationApi.Service
 {
@@ -24,7 +25,7 @@ namespace LOSApplicationApi.Service
 
         public List<DTO.FetchStateDTO> FetchStates()
         {
-            var details = db.State.Where(x => x.IsActive == 1 && x.IsDeleted == 0).ToList();
+            var details = db.State.Include(x=>x.Country).Where(x => x.IsActive == 1 && x.IsDeleted == 0).ToList();
             var mappedDetails = mapper.Map<List<DTO.FetchStateDTO>>(details);
             return mappedDetails;
         }

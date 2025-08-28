@@ -3,6 +3,7 @@ using LOSApplicationApi.Data;
 using LOSApplicationApi.DTO;
 using LOSApplicationApi.Model;
 using LOSApplicationApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LOSApplicationApi.Service
 {
@@ -41,7 +42,7 @@ namespace LOSApplicationApi.Service
 
         public List<DTO.FetchPincodeDTO> FetchPincodes()
         {
-            var details = db.Pincode.Where(p => p.IsActive == 1 && p.IsDeleted == 0).ToList();
+            var details = db.Pincode.Include(x=>x.City).Include(x=>x.State).Include(x=>x.Country).Where(p => p.IsActive == 1 && p.IsDeleted == 0).ToList();
             var mappedDetails = mapper.Map<List<FetchPincodeDTO>>(details);
             return mappedDetails;
         }
