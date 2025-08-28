@@ -43,7 +43,7 @@ namespace LOSApplicationApi.Controllers
                 return BadRequest("Invalid country data.");
             }
             country.UpdateCountry(countryDTO);
-            return Ok("Country updated successfully");
+            return Ok(new { message = "Country updated successfully" });
         }
 
         [HttpDelete]

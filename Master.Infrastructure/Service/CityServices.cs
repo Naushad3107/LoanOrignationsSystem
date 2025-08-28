@@ -3,6 +3,7 @@ using LOSApplicationApi.Data;
 using LOSApplicationApi.DTO;
 using LOSApplicationApi.Model;
 using LOSApplicationApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LOSApplicationApi.Service
 {
@@ -25,7 +26,7 @@ namespace LOSApplicationApi.Service
 
         public List<DTO.FetchCityDTO> FetchCities()
         {
-            var details = db.City.Where(x => x.IsActive == 1 && x.IsDeleted == 0).Where(x => x.IsActive == 1 && x.IsDeleted == 0).ToList();
+            var details = db.City.Where(x => x.IsActive == 1 && x.IsDeleted == 0).Include(x=>x.States).ToList();
             var mappedDetails = mapper.Map<List<FetchCityDTO>>(details);
             return mappedDetails;
         }

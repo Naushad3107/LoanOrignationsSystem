@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Master.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class freshstart : Migration
+    public partial class LOSMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -108,6 +108,22 @@ namespace Master.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "modules",
+                columns: table => new
+                {
+                    ModuleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModuleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<byte>(type: "tinyint", nullable: false),
+                    IsDeleted = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_modules", x => x.ModuleId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OccupationTypes",
                 columns: table => new
                 {
@@ -124,6 +140,20 @@ namespace Master.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OccupationTypes", x => x.OccupationTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PermissionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.PermissionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,6 +268,28 @@ namespace Master.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "subModules",
+                columns: table => new
+                {
+                    SubModuleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubModuleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModuleId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_subModules", x => x.SubModuleId);
+                    table.ForeignKey(
+                        name: "FK_subModules_modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "modules",
+                        principalColumn: "ModuleId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -300,6 +352,40 @@ namespace Master.Infrastructure.Migrations
                         column: x => x.StateId,
                         principalTable: "State",
                         principalColumn: "StateId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    RolePermissionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false),
+                    SubModuleId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => x.RolePermissionId);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "PermissionId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Role",
+                        principalColumn: "RoleId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_subModules_SubModuleId",
+                        column: x => x.SubModuleId,
+                        principalTable: "subModules",
+                        principalColumn: "SubModuleId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -368,9 +454,29 @@ namespace Master.Infrastructure.Migrations
                 column: "StateId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_PermissionId",
+                table: "RolePermissions",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_RoleId",
+                table: "RolePermissions",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_SubModuleId",
+                table: "RolePermissions",
+                column: "SubModuleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_State_CountryId",
                 table: "State",
                 column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_subModules_ModuleId",
+                table: "subModules",
+                column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_DepartmentId",
@@ -412,6 +518,9 @@ namespace Master.Infrastructure.Migrations
                 name: "ReajectionReasons");
 
             migrationBuilder.DropTable(
+                name: "RolePermissions");
+
+            migrationBuilder.DropTable(
                 name: "UserRole");
 
             migrationBuilder.DropTable(
@@ -419,6 +528,12 @@ namespace Master.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "City");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
+                name: "subModules");
 
             migrationBuilder.DropTable(
                 name: "Departments");
@@ -434,6 +549,9 @@ namespace Master.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "State");
+
+            migrationBuilder.DropTable(
+                name: "modules");
 
             migrationBuilder.DropTable(
                 name: "Country");

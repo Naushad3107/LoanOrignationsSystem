@@ -6,9 +6,9 @@ namespace LOSApplicationApi.DTO
     {
         public int UserRoleId { get; set; }
 
-        public int UserName { get; set; }
+        public string UserName { get; set; }
 
-        public int RoleName { get; set; }
+        public string RoleName { get; set; }
         public DateTime AssignedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }

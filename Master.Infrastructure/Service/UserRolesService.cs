@@ -2,6 +2,7 @@
 using LOSApplicationApi.Data;
 using LOSApplicationApi.DTO;
 using LOSApplicationApi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LOSApplicationApi.Service
 {
@@ -24,7 +25,7 @@ namespace LOSApplicationApi.Service
 
         public List<FetchUserRolesDTO> FetchUserRoles()
         {
-            var details = db.UserRole.Where(x => x.IsDeleted == 0).ToList();
+            var details = db.UserRole.Where(x => x.IsDeleted == 0).Include(x=>x.User).Include(x=>x.Role).ToList();
             var mappedDetails = mapper.Map<List<FetchUserRolesDTO>>(details);
             return mappedDetails;
         }
