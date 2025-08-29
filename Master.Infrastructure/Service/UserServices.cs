@@ -49,7 +49,7 @@ namespace LOSApplicationApi.Service
             var user = db.User.FirstOrDefault(u => u.UserId == id);
             if (user != null)
             {
-                user.IsDeleted = 1; // Assuming IsDeleted is a flag to mark deletion
+                user.IsDeleted = 1; // Assum
 
                 db.SaveChanges();
             }

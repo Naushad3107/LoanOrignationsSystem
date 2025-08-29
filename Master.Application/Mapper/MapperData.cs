@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using LOSApplicationApi.DTO;
 using LOSApplicationApi.Model;
+using Master.Application.Repository;
 using Master.Domain.DTO.ModuleDTOs;
+using Master.Domain.DTO.PermissionDTOs;
+using Master.Domain.DTO.RolePermissionDTOs;
+using Master.Domain.DTO.SubModuleDTOs;
 using Master.Domain.Model;
 
 namespace LOSApplicationApi.Mapper
@@ -71,7 +75,29 @@ namespace LOSApplicationApi.Mapper
             //mapping for modules
             CreateMap<Module,AddModuleDTO>().ReverseMap();
             CreateMap<Module,FetchModuleDTO>().ReverseMap();
+            CreateMap<Module, UpdateModuleDTO>().ReverseMap();
 
+
+            //mapping for submodules
+            CreateMap<SubModule, AddSubModuleDTO>().ReverseMap();
+            CreateMap<SubModule, GetSubModuleDTO>()
+                .ForMember(dest => dest.ModuleName, opt => opt.MapFrom(src => src.Module.ModuleName));
+            CreateMap<SubModule, UpdateSubModuleDTO>().ReverseMap();
+
+            //mapping for permissions
+            CreateMap<Permissions, AddPermissionDTO>().ReverseMap();
+            CreateMap<Permissions, FetchPermissionDTO>().ReverseMap();
+            CreateMap<Permissions, UpdatePermissionDTO>().ReverseMap();
+
+            //mapping for rolepermissions
+            CreateMap<AddRolePermissionDTO, RolePermissions>()
+                    .ForMember(dest => dest.PermissionId, opt => opt.Ignore());
+
+
+            CreateMap<RolePermissions, FetchRolePermissionsDTO>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
+                .ForMember(dest => dest.PermissionNames, opt => opt.MapFrom(src => src.Permission.PermissionName))
+                .ForMember(dest => dest.SubModuleNames, opt => opt.MapFrom(src => src.SubModule.SubModuleName));
         }
 
     }
