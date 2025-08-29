@@ -22,6 +22,8 @@ namespace Master.Infrastructure.Service
         }
         public void AddModule(AddModuleDTO module)
         {
+            
+
             var data = mapper.Map<Module>(module);
             db.modules.Add(data);
             db.SaveChanges();
@@ -29,8 +31,21 @@ namespace Master.Infrastructure.Service
 
         public void DeleteModule(int id)
         {
-            db.modules.Where(x => x.IsDeleted == 1);
-            db.SaveChanges();
+            bool ifreferenced = db.subModules.Any(sb => sb.ModuleId == id);
+            if(ifreferenced)
+            {
+                throw new Exception("Module is referenced in SubModule, cannot delete.");
+            }
+            else
+            {
+                var user = db.modules.FirstOrDefault(x => x.ModuleId == id);
+
+                if (user != null)
+                {
+                    user.IsDeleted = 1;
+                }
+                db.SaveChanges();
+            }
         }
 
 
@@ -47,6 +62,16 @@ namespace Master.Infrastructure.Service
             var module = db.modules.FirstOrDefault(m => m.ModuleId == id);
             return module;
         }
+
+        public void UpdateModule(UpdateModuleDTO module)
+        {
+            var details = db.modules.FirstOrDefault(m => m.ModuleId == module.ModuleId);
+            var data = mapper.Map<Module>(details);
+            db.modules.Update(data);
+            db.SaveChanges();
+        }
+
+
 
 
 

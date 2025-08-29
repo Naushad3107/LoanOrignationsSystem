@@ -4,6 +4,7 @@ using LOSApplicationApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Master.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250826124131_soft-delete")]
+    partial class softdelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -617,12 +620,6 @@ namespace Master.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("IsActive")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("IsDeleted")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("PermissionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -687,9 +684,6 @@ namespace Master.Infrastructure.Migrations
                     b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ModuleId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("SubModuleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -697,8 +691,6 @@ namespace Master.Infrastructure.Migrations
                     b.HasKey("SubModuleId");
 
                     b.HasIndex("ModuleId");
-
-                    b.HasIndex("ModuleId1");
 
                     b.ToTable("subModules");
                 });
@@ -825,10 +817,6 @@ namespace Master.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Master.Domain.Model.Module", null)
-                        .WithMany("SubModules")
-                        .HasForeignKey("ModuleId1");
-
                     b.Navigation("Module");
                 });
 
@@ -876,11 +864,6 @@ namespace Master.Infrastructure.Migrations
             modelBuilder.Entity("LOSApplicationApi.Model.Users", b =>
                 {
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("Master.Domain.Model.Module", b =>
-                {
-                    b.Navigation("SubModules");
                 });
 
             modelBuilder.Entity("Master.Domain.Model.Permissions", b =>

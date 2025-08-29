@@ -26,6 +26,8 @@ namespace Master.Domain.Model
 
         public byte IsActive { get; set; }
 
+        public byte IsDeleted { get; set; }
+
 
         // Navigation properties
 

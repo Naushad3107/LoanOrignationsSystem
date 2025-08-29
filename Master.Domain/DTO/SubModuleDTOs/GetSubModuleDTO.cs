@@ -1,35 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Master.Domain.Model
+namespace Master.Domain.DTO.SubModuleDTOs
 {
-    public class SubModule
+    public class GetSubModuleDTO
     {
-        [Key]
+
         public int SubModuleId { get; set; }
 
         public string SubModuleName { get; set; }
 
         public string Description { get; set; }
 
-        [ForeignKey("Module")]
+        
         public int ModuleId { get; set; }
 
+        public string ModuleName { get; set; }
+
         public byte IsActive { get; set; }
-
-        public byte IsDeleted { get; set; }
-
-
-        //navigation property
-        public Module Module { get; set; }
-
-
-        public List<RolePermissions> RolePermissions { get; set; }
 
     }
 }

@@ -17,6 +17,11 @@ namespace Master.Domain.Model
 
         public string Description { get; set; }
 
+
+        public byte IsActive { get; set; }
+
+        public byte IsDeleted { get; set; }
+
         public List<RolePermissions> RolePermissions { get; set; }
     }
 }
