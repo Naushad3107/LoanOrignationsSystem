@@ -17,5 +17,7 @@ namespace Master.Application.Repository
         void DeleteModule(int id);
 
         Module FetchModuleById(int id);
+
+        void UpdateModule(UpdateModuleDTO module);
     }
 }

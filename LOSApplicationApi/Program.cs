@@ -39,6 +39,9 @@ builder.Services.AddScoped<IDocumentType, DocumentTypeService>();
 builder.Services.AddScoped<IDepartment, DepartmentService>();
 builder.Services.AddScoped<IBranch, BranchServices>();
 builder.Services.AddScoped<IModule, ModuleService>();
+builder.Services.AddScoped<ISubModule, SubModuleService>();
+builder.Services.AddScoped<IPermission, PermissionServices>();
+builder.Services.AddScoped<IRolePermissions, RolePermissionService>();
 
 
 

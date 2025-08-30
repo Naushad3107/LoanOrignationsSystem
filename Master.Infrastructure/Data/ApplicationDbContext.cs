@@ -29,6 +29,8 @@ namespace LOSApplicationApi.Data
 
         public DbSet<SubModule> subModules { get; set; }
 
+        public DbSet<Permissions> Permissions { get; set; }
+
         public DbSet<RolePermissions> RolePermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -95,7 +97,7 @@ namespace LOSApplicationApi.Data
             modelBuilder.Entity<SubModule>()
                 .HasOne(m => m.Module)
                 .WithMany()
-                .HasForeignKey(m => m.ModuleId)
+
                 .OnDelete(DeleteBehavior.Restrict);
 
             //navigation properties for rolepermissions
