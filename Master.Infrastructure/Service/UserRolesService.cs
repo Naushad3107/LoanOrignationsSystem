@@ -54,11 +54,22 @@ namespace LOSApplicationApi.Service
 
         public void DeleteUserRole(int id)
         {
-            var data = db.UserRole.FirstOrDefault(x => x.UserRoleId == id && x.IsDeleted == 0);
-            if (data != null)
+
+            bool ifreferenced = db.RolePermissions.Any(u => u.RoleId == id);
+            if (!ifreferenced)
             {
-                data.IsDeleted = 1; // Assuming IsDeleted is a flag to mark deletion
-                db.SaveChanges();
+                var data = db.UserRole.FirstOrDefault(x => x.UserRoleId == id && x.IsDeleted == 0);
+                if (data != null)
+                {
+                    db.UserRole.Remove(data);
+                    db.SaveChanges();
+                }
+            }
+            else
+            {
+                throw new Exception("UserRole is referenced in RolePermissions, cannot delete.");
+
+
             }
         }
     }
