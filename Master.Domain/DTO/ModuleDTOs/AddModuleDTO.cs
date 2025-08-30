@@ -8,7 +8,6 @@ namespace Master.Domain.DTO.ModuleDTOs
 {
     public class AddModuleDTO
     {
-        public int ModuleId { get; set; }
 
         public string ModuleName { get; set; }
 

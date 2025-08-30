@@ -9,8 +9,6 @@ namespace Master.Domain.DTO.SubModuleDTOs
 {
     public class AddSubModuleDTO
     {
-        public int SubModuleId { get; set; }
-
         public string SubModuleName { get; set; }
 
         public string Description { get; set; }

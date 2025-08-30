@@ -35,7 +35,7 @@ namespace LOSApplicationApi.Service
 
         public FetchPincodeDTO FetchPincodeById(int id)
         {
-            var data = db.Pincode.FirstOrDefault(p => p.PincodeId == id);
+            var data = db.Pincode.Include(c => c.City).Include(s => s.State).Include(c => c.Country).FirstOrDefault(p => p.PincodeId == id);
             var mappedData = mapper.Map<FetchPincodeDTO>(data);
             return mappedData;
         }
