@@ -64,7 +64,10 @@ namespace LOSApplicationApi.Service
                     db.SaveChanges();
                 }
             }
-
+            else
+            {
+                throw new Exception("Role is referenced in UserRoles, cannot delete.");
+            }
         }
 
     }
