@@ -53,12 +53,18 @@ namespace LOSApplicationApi.Service
 
         public void DeleteRole(int id)
         {
-            var data = db.Role.FirstOrDefault(r =>  r.IsDeleted == 0);
-            if (data != null)
+
+            bool ifreferenced = db.UserRole.Any(ur => ur.RoleId == id);
+            if (!ifreferenced)
             {
-                data.IsDeleted = 1; // Assuming IsDeleted is a flag to mark deletion
-                db.SaveChanges();
+                var data = db.Role.FirstOrDefault(r => r.RoleId == id && r.IsActive == 1 && r.IsDeleted == 0);
+                if (data != null)
+                {
+                    data.IsDeleted = 1; // Assuming IsDeleted is a flag to mark deletion
+                    db.SaveChanges();
+                }
             }
+
         }
 
     }
